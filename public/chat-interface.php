@@ -1,25 +1,20 @@
-<div class="openai-chatbot-container">
-    <dotlottie-player 
-        class="chatbot-icon" 
-        src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" 
-        background="transparent" 
-        speed="1" 
-        style="width: 60px; height: 60px;" 
-        loop 
-        autoplay
-    ></dotlottie-player>
-    
-    <div class="chatbot-modal" style="display: none;">
-        <div class="chatbot-header">
-            <img src="<?php echo OACB_PLUGIN_URL . 'public/assistant-thumb.png'; ?>" alt="Assistant">
-            <h3><?php esc_html_e('AI Assistant', 'openai-chatbot'); ?></h3>
-        </div>
-        
-        <div class="chatbot-messages"></div>
-        
-        <div class="chatbot-input">
-            <input type="text" placeholder="<?php esc_attr_e('Type your message...', 'openai-chatbot'); ?>">
-            <button class="send-button"><?php esc_html_e('Send', 'openai-chatbot'); ?></button>
-        </div>
+<div class="oacb-chat-container" style="display: none;">
+    <div class="oacb-chat-header">
+        <dotlottie-player 
+            src="<?php echo OACB_PLUGIN_URL . 'public/ai-assistant.lottie' ?>" 
+            background="transparent" 
+            speed="1" 
+            style="width: 40px; height: 40px;" 
+            loop autoplay>
+        </dotlottie-player>
+        <h3><?php echo esc_html(get_option('oacb_assistant_name', 'AI Assistant')) ?></h3>
+    </div>
+    <div class="oacb-chat-messages"></div>
+    <div class="oacb-input-container">
+        <input type="text" placeholder="Type your message..." />
+        <button class="oacb-send-btn">Send</button>
     </div>
 </div>
+<button class="oacb-chat-toggle">
+    <dotlottie-player ...></dotlottie-player>
+</button>

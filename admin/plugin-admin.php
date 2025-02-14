@@ -1,73 +1,51 @@
 <?php
-add_action('admin_menu', 'openai_chatbot_add_admin_menu');
-add_action('admin_init', 'openai_chatbot_settings_init');
+// Add admin menu
+add_action('admin_menu', 'oacb_add_admin_menu');
+add_action('admin_init', 'oacb_settings_init');
 
-function openai_chatbot_add_admin_menu() {
+function oacb_add_admin_menu() {
     add_options_page(
-        'OpenAI ChatBot',
-        'OpenAI ChatBot',
+        'OpenAI ChatBot Settings',
+        'AI ChatBot',
         'manage_options',
         'openai-chatbot',
-        'openai_chatbot_options_page'
+        'oacb_render_settings_page'
     );
 }
 
-function openai_chatbot_settings_init() {
-    register_setting('openai_chatbot', 'openai_chatbot_settings');
+function oacb_settings_init() {
+    register_setting('oacb_settings_group', 'oacb_openai_key', [
+        'type' => 'string',
+        'sanitize_callback' => 'sanitize_text_field'
+    ]);
+    
+    register_setting('oacb_settings_group', 'oacb_assistant_id', [
+        'type' => 'string',
+        'sanitize_callback' => 'sanitize_text_field'
+    ]);
 
     add_settings_section(
-        'openai_chatbot_section',
-        __('API Configuration', 'openai-chatbot'),
-        'openai_chatbot_settings_section_callback',
-        'openai_chatbot'
+        'oacb_api_section',
+        'API Configuration',
+        'oacb_api_section_cb',
+        'openai-chatbot'
     );
 
     add_settings_field(
-        'openai_api_key',
-        __('OpenAI API Key', 'openai-chatbot'),
-        'openai_api_key_render',
-        'openai_chatbot',
-        'openai_chatbot_section'
+        'oacb_openai_key',
+        'OpenAI API Key',
+        'oacb_openai_key_cb',
+        'openai-chatbot',
+        'oacb_api_section'
     );
 
     add_settings_field(
-        'assistant_id',
-        __('Assistant ID', 'openai-chatbot'),
-        'assistant_id_render',
-        'openai_chatbot',
-        'openai_chatbot_section'
+        'oacb_assistant_id',
+        'Assistant ID',
+        'oacb_assistant_id_cb',
+        'openai-chatbot',
+        'oacb_api_section'
     );
 }
 
-function openai_api_key_render() {
-    $value = get_option('openai_chatbot_api_key');
-    ?>
-    <input type="password" name="openai_chatbot_api_key" value="<?php echo esc_attr($value); ?>" class="regular-text">
-    <?php
-}
-
-function assistant_id_render() {
-    $value = get_option('openai_chatbot_assistant_id');
-    ?>
-    <input type="text" name="openai_chatbot_assistant_id" value="<?php echo esc_attr($value); ?>" class="regular-text">
-    <?php
-}
-
-function openai_chatbot_settings_section_callback() {
-    echo __('Add your OpenAI API credentials and Assistant ID:', 'openai-chatbot');
-}
-
-function openai_chatbot_options_page() {
-    ?>
-    <div class="wrap">
-        <h1><?php esc_html_e('OpenAI ChatBot Settings', 'openai-chatbot'); ?></h1>
-        <form action="options.php" method="post">
-            <?php
-            settings_fields('openai_chatbot');
-            do_settings_sections('openai_chatbot');
-            submit_button();
-            ?>
-        </form>
-    </div>
-    <?php
-}
+// ... (remaining admin UI rendering functions)
