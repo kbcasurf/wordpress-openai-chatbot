@@ -22,10 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Update sendMessage function to handle errors
     function sendMessage() {
         const input = document.querySelector('.oacb-input-container input');
         const message = input.value.trim();
         if (!message) return;
+
+        // Disable input during processing
+        input.disabled = true;
+        document.querySelector('.oacb-send-btn').disabled = true;
 
         // Add user message
         appendMessage('user', message);
@@ -42,7 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentThread = response.data.thread_id;
                 sessionStorage.setItem('oacb_thread_id', currentThread);
                 appendMessage('assistant', response.data.response);
+            } else {
+                appendMessage('assistant', 'Error: ' + (response.data.message || 'Unknown error'));
             }
+        }).always(() => {
+            input.disabled = false;
+            document.querySelector('.oacb-send-btn').disabled = false;
         });
     }
 
@@ -50,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const messagesContainer = document.querySelector('.oacb-chat-messages');
         const div = document.createElement('div');
         div.className = `oacb-message oacb-${role}-message`;
-        div.innerHTML = wp.ksesPost(content);
+        div.textContent = content;
         messagesContainer.appendChild(div);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }

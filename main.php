@@ -26,12 +26,11 @@ add_action('wp_ajax_nopriv_oacb_chat', 'oacb_handle_chat_request');
 
 
 function oacb_enqueue_public_assets() {
-    // Only enqueue on frontend
     if (!is_admin()) {
-        // Lottie player
+        // Replace with UMD build that doesn't need modules
         wp_enqueue_script(
             'dotlottie-player', 
-            'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs', 
+            'https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js', 
             array(), 
             null, 
             true
@@ -44,11 +43,11 @@ function oacb_enqueue_public_assets() {
             array(), 
             filemtime(OACB_PLUGIN_DIR . 'public/chatbot-style.css')
         );
-        
+
         wp_enqueue_script(
             'oacb-chat-script', 
             OACB_PLUGIN_URL . 'public/chatbot-script.js', 
-            array('jquery'), 
+            array('jquery', 'wp-util'), // Add wp-util here
             filemtime(OACB_PLUGIN_DIR . 'public/chatbot-script.js'), 
             true
         );

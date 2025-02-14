@@ -105,3 +105,14 @@
     color: #1e293b;
     margin-right: auto;
 }
+
+/* Add this to fix the circle appearance */
+.oacb-chat-toggle lottie-player {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.oacb-chat-toggle {
+    background: transparent !important;
+    box-shadow: none !important;
+}
