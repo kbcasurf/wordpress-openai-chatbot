@@ -1,4 +1,22 @@
 <?php
+// Add settings link to plugin list
+add_filter('plugin_action_links_' . plugin_basename(OACB_PLUGIN_DIR . 'main.php'), 'oacb_add_settings_link');
+
+function oacb_add_settings_link($links) {
+    $settings_link = sprintf(
+        '<a href="%s">%s</a>',
+        esc_url(admin_url('options-general.php?page=openai-chatbot')),
+        esc_html__('Settings', 'openai-chatbot')
+    );
+    
+    // Add security: ensure only users with proper capabilities see the link
+    if (current_user_can('manage_options')) {
+        array_unshift($links, $settings_link);
+    }
+    
+    return $links;
+}
+
 // Add admin menu
 add_action('admin_menu', 'oacb_add_admin_menu');
 add_action('admin_init', 'oacb_settings_init');
