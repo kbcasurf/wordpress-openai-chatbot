@@ -3,14 +3,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.querySelector('.oacb-chat-container');
     let currentThread = sessionStorage.getItem('oacb_thread_id');
 
-    chatToggle.addEventListener('click', () => {
-        chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
-    });
+    // Initialize chat interface
+    function initChat() {
+        // Toggle visibility
+        chatToggle.addEventListener('click', () => {
+            chatContainer.classList.toggle('visible');
+        });
 
-    document.querySelector('.oacb-send-btn').addEventListener('click', sendMessage);
-    document.querySelector('.oacb-input-container input').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
-    });
+        // Send message handlers
+        document.querySelector('.oacb-send-btn').addEventListener('click', sendMessage);
+        document.querySelector('.oacb-input-container input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Load existing thread if available
+        if (currentThread) {
+            appendMessage('assistant', 'Welcome back! How can I assist you today?');
+        }
+    }
 
     function sendMessage() {
         const input = document.querySelector('.oacb-input-container input');
@@ -37,9 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function appendMessage(role, content) {
+        const messagesContainer = document.querySelector('.oacb-chat-messages');
         const div = document.createElement('div');
         div.className = `oacb-message oacb-${role}-message`;
         div.innerHTML = wp.ksesPost(content);
-        document.querySelector('.oacb-chat-messages').appendChild(div);
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
+
+    // Initialize chat
+    initChat();
 });

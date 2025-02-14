@@ -24,20 +24,44 @@ add_action('wp_footer', 'oacb_render_chat_interface');
 add_action('wp_ajax_oacb_chat', 'oacb_handle_chat_request');
 add_action('wp_ajax_nopriv_oacb_chat', 'oacb_handle_chat_request');
 
+
 function oacb_enqueue_public_assets() {
-    // Lottie player
-    wp_enqueue_script('dotlottie-player', 'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs', array(), null, true);
-    
-    // Plugin assets
-    wp_enqueue_style('oacb-chat-style', OACB_PLUGIN_URL . 'public/chipublic/chatbot-style.css');
-    wp_enqueue_script('oacb-chat-script', OACB_PLUGIN_URL . 'public/chatbot-script.js', array('jquery'), '1.0', true);
-    
-    // Localize script
-    wp_localize_script('oacb-chat-script', 'oacbData', array(
-        'ajaxUrl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('oacb_chat_nonce')
-    ));
+    // Only enqueue on frontend
+    if (!is_admin()) {
+        // Lottie player
+        wp_enqueue_script(
+            'dotlottie-player', 
+            'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs', 
+            array(), 
+            null, 
+            true
+        );
+        
+        // Plugin assets
+        wp_enqueue_style(
+            'oacb-chat-style', 
+            OACB_PLUGIN_URL . 'public/chatbot-style.css', 
+            array(), 
+            filemtime(OACB_PLUGIN_DIR . 'public/chatbot-style.css')
+        );
+        
+        wp_enqueue_script(
+            'oacb-chat-script', 
+            OACB_PLUGIN_URL . 'public/chatbot-script.js', 
+            array('jquery'), 
+            filemtime(OACB_PLUGIN_DIR . 'public/chatbot-script.js'), 
+            true
+        );
+        
+        // Localize script
+        wp_localize_script('oacb-chat-script', 'oacbData', array(
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('oacb_chat_nonce'),
+            'assistantName' => esc_html(get_option('oacb_assistant_name', 'AI Assistant'))
+        ));
+    }
 }
+
 
 function oacb_render_chat_interface() {
     include OACB_PLUGIN_DIR . 'public/chat-interface.php';
